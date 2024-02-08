@@ -1,0 +1,122 @@
+﻿<Window x:Class="Run.View.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Menekülj! játék" 
+        Height="450" 
+        Width="400" 
+        MinHeight="450" 
+        MinWidth="400">
+
+    <Window.InputBindings>
+        <KeyBinding Key="W" Command="{Binding MoveCommand}" CommandParameter="W" />
+        <KeyBinding Key="A" Command="{Binding MoveCommand}" CommandParameter="A" />
+        <KeyBinding Key="S" Command="{Binding MoveCommand}" CommandParameter="S" />
+        <KeyBinding Key="D" Command="{Binding MoveCommand}" CommandParameter="D" />
+        <KeyBinding Key="Escape" Command="{Binding MoveCommand}" CommandParameter="Escape" />
+    </Window.InputBindings>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Menu Grid.Row="0">
+            <MenuItem Header="File">
+                <MenuItem Header="Új játék" 
+                          Command="{Binding NewGameCommand}" />
+                <Separator />
+                <MenuItem Header="Mentés..." 
+                          Command="{Binding SaveGameCommand}" />
+                <MenuItem Header="Betöltés..." 
+                          Command="{Binding LoadGameCommand}" />
+                <Separator />
+                <MenuItem Header="Kilépés" 
+                          Command="{Binding ExitCommand}" />
+            </MenuItem>
+            <MenuItem Header="Beállítások">
+                <MenuItem Header="Méret">
+                    <MenuItem Header="11 x 11" 
+                              IsCheckable="True" 
+                              IsChecked="{Binding IsGameSizeSmall}" />
+                    <MenuItem Header="15 x 15" 
+                              IsCheckable="True" 
+                              IsChecked="{Binding IsGameSizeMedium}" />
+                    <MenuItem Header="21 x 21" 
+                              IsCheckable="True" 
+                              IsChecked="{Binding IsGameSizeLarge}" />
+                </MenuItem>
+
+                <MenuItem Header="Nehézség">
+                    <MenuItem Header="Könnyű"  
+                              IsCheckable="True" 
+                              IsChecked="{Binding IsGameEasy}" />
+                    <MenuItem Header="Közepes" 
+                              IsCheckable="True" 
+                              IsChecked="{Binding IsGameMedium}" />
+                    <MenuItem Header="Nehéz"   
+                              IsCheckable="True" 
+                              IsChecked="{Binding IsGameHard}" />
+                </MenuItem>
+
+            </MenuItem>
+        </Menu>
+
+
+        <ItemsControl Grid.Row="1" 
+                      ItemsSource="{Binding Fields}">
+            <!--az mezőket tároló vezérlő-->
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <!--a gombokat egy rácsba fűzzük fel-->
+                    <UniformGrid Rows="{Binding GameSize, UpdateSourceTrigger=PropertyChanged}" 
+                                 Columns="{Binding GameSize, UpdateSourceTrigger=PropertyChanged}"/>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+
+            <ItemsControl.ItemTemplate>
+                <!--az elemek gombok lesznek-->
+                <DataTemplate>
+                    <Button Focusable="False" 
+                            RenderTransformOrigin="0.5, 0.5"
+                            Background="{Binding Color}">
+                        
+                    </Button>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+
+            <ItemsControl.ItemContainerStyle>
+                <!--a függőségi tulajdonságokat kjülön kell kötnünk-->
+                <Style>
+                    <Setter Property="Grid.Row" 
+                            Value="{Binding X}" />
+                    <Setter Property="Grid.Column" 
+                            Value="{Binding Y}" />
+                </Style>
+            </ItemsControl.ItemContainerStyle>
+        </ItemsControl>
+
+
+        <StatusBar Grid.Row="2">
+            <!-- státuszsor a lépésszámhoz és az időhöz -->
+            <StatusBarItem>
+                <TextBlock Text="Lépésszám: " />
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock Text="{Binding GameStepCount}" />
+            </StatusBarItem>
+            <Separator />
+            <StatusBarItem>
+                <TextBlock Text="Játékidő: " />
+            </StatusBarItem>
+            <StatusBarItem>
+                <TextBlock Text="{Binding GameTime}" />
+            </StatusBarItem>
+            <Separator />
+            <StatusBarItem />
+        </StatusBar>
+
+    </Grid>
+
+</Window>
