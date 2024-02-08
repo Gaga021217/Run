@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Run_MAUI.View.GamePage"
+             Title="Menekülj!">
+
+    <Grid Margin="4" 
+          RowSpacing="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid.GestureRecognizers>
+            <SwipeGestureRecognizer Threshold="100" Direction="Left" Command="{Binding MoveCommand}" CommandParameter="A" />
+            <SwipeGestureRecognizer Threshold="100" Direction="Right" Command="{Binding MoveCommand}" CommandParameter="D" />
+            <SwipeGestureRecognizer Threshold="100" Direction="Up" Command="{Binding MoveCommand}" CommandParameter="W" />
+            <SwipeGestureRecognizer Threshold="100" Direction="Down" Command="{Binding MoveCommand}" CommandParameter="S" />
+        </Grid.GestureRecognizers>
+
+        <!-- a gombokat a képernyő tetejére helyezzük -->
+        <Button Text="Új játék" 
+                Command="{Binding NewGameCommand}" 
+                Grid.Row="0" 
+                HorizontalOptions="Start" 
+                IsEnabled="True"
+        />
+        <Button Text="Leállítás"
+                Command="{Binding MoveCommand}"
+                CommandParameter="Escape"
+                Grid.Row="0"
+                HorizontalOptions="Center"
+                IsEnabled="True"
+                />
+        <Button Text="Beállítások" 
+                Command="{Binding ExitCommand}" 
+                Grid.Row="0" 
+                HorizontalOptions="End" 
+                IsEnabled="True"
+
+        />
+
+        <Grid Grid.Row="1"
+              BindableLayout.ItemsSource="{Binding Fields}"
+              RowDefinitions="{Binding GameTableRows, UpdateSourceEventName=PropertyChanged}"
+              ColumnDefinitions="{Binding GameTableColumns, UpdateSourceEventName=PropertyChanged}"
+              ColumnSpacing="4"
+              RowSpacing="4">
+
+
+            <!-- a játéktáblát egy sorfolytos listával valósítjuk meg -->
+            <BindableLayout.ItemTemplate>
+                <DataTemplate>
+                    <!-- a rács elemei gombok lesznek -->
+                    <Button Grid.Row="{Binding Y}"
+                            Grid.Column="{Binding X}"
+                            BackgroundColor="{Binding Color}"
+                            Padding="0"
+                            FontSize="Medium"
+                            VerticalOptions="FillAndExpand"
+                            HorizontalOptions="FillAndExpand" />
+                </DataTemplate>
+            </BindableLayout.ItemTemplate>
+        </Grid>
+
+        <!-- az információkat alul írjuk ki -->
+        <HorizontalStackLayout HorizontalOptions="Start" Grid.Row="2">
+            <Label Text="Lépésszám: " />
+            <Label Text="{Binding GameStepCount}" />
+        </HorizontalStackLayout>
+        <HorizontalStackLayout HorizontalOptions="End" Grid.Row="2">
+            <Label Text="Játékidő: " />
+            <Label Text="{Binding GameTime}" />
+        </HorizontalStackLayout>
+    </Grid>
+</ContentPage>
